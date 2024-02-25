@@ -1,18 +1,32 @@
-package webserver;
+package util;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CustomRequest {
     private String method;
-    private String location;
+    private String target;
     private String httpVersion;
     private Map<String, String> header;
     private Map<String, String> param;
     private String body;
 
+    public CustomRequest() {
+        this.header = new HashMap<>();
+        this.param = new HashMap<>();
+    }
+
+
     public String getMethod () {
         return this.method;
+    }
+
+    public String getTarget () {
+        return this.target;
+    }
+
+    public String getHttpVersion () {
+        return this.httpVersion;
     }
 
     public String getHeader (String key) {
@@ -23,20 +37,12 @@ public class CustomRequest {
         return this.header;
     }
 
-    public String getLocation () {
-        return this.location;
-    }
-
     public String getParam (String key) {
         return this.param.get(key);
     }
 
-    public Map<String, String> getParam () {
+    public Map<String, String> getParams () {
         return this.param;
-    }
-
-    public String getHttpVersion () {
-        return this.httpVersion;
     }
 
     public String getBody () {
@@ -47,13 +53,13 @@ public class CustomRequest {
         this.method = method;
     }
 
-    public void setLocation(String location) {
+    public void setTarget(String location) {
         if (location == null) {
             return;
         }
 
         String[] splited = location.split("\\?");
-        this.location = splited[0];
+        this.target = splited[0];
 
         // param이 없으면 파싱 종료
         if (splited.length <= 1) {
@@ -61,7 +67,7 @@ public class CustomRequest {
         }
 
         String[] params = splited[1].split("&");
-        this.param = new HashMap<String, String>();
+        this.param = new HashMap<>();
         for(String param: params) {
             String[] values = param.split("=");
             String key = values[0];
@@ -69,13 +75,16 @@ public class CustomRequest {
             this.param.put(key, value);
         }
     }
+    public void setParams(Map<String, String> params) {
+        this.param = params;
+    }
 
     public void setHttpVersion(String httpVersion) {
         this.httpVersion = httpVersion;
     }
 
-    public void setHeader(Map<String, String> header) {
-        this.header = header;
+    public void setHeader(String key, String value) {
+        this.header.put(key, value);
     }
 
     public void setBody(String body) {
